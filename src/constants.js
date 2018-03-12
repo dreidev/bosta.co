@@ -1,0 +1,1 @@
+export const BASE_URL = "https://bosta.co/api/v0.4.1"

@@ -1,0 +1,58 @@
+{
+  "plugins": [
+    "transform-class-properties",
+    "transform-decorators-legacy",
+    ["transform-object-rest-spread", { "useBuiltIns": true }],
+    [
+      "module-resolver",
+      {
+        "root": ["./src"],
+        "alias": {
+          "app": "./app"
+        }
+      }
+    ]
+  ],
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": "current"
+            },
+            "loose": true
+          }
+        ]
+      ]
+    },
+    "cjs": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": "current"
+            },
+            "loose": true
+          }
+        ]
+      ]
+    },
+    "es": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": "current"
+            },
+            "loose": true,
+            "modules": false
+          }
+        ]
+      ]
+    }
+  }
+}
