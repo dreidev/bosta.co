@@ -1,111 +1,66 @@
 import MockAdapter from "axios-mock-adapter"
-import faker from "faker"
-import { mockAllAPIs } from "./helper/api_mock"
-import API, {
-  voidTransaction,
-  refundTransaction,
-  pay,
-  tokenize,
-  createPaymentKey,
-  createOrder,
-  updateIntegration,
-  getIntegration,
-  getUser,
+import { mockAllAPIs, Delivery } from "./helper/api_mock"
+import {
+  API,
+  createDelivery,
+  getDeliveries,
+  getDelivery,
+  updateDelivery,
+  canUpdateDelivery,
+  cancelDelivery,
 } from "../api"
 
-const mock = new MockAdapter(API)
+const api = API("boo")
+const mock = new MockAdapter()
 beforeAll(async () => {
   mockAllAPIs(mock)
 })
 afterAll(async () => mock.restore())
 
-test("API pay", async () => {
-  const requestData = {
-    source: {},
-    payment_token: faker.random.alphaNumeric(),
-    billing: {},
-    api_source: "IFRAME",
-  }
-  const res = await pay(requestData)
+test("API createDelivery", async () => {
+  let delivery = Delivery()
+  delivery.sameDay = false
+  let res = await createDelivery(api, delivery)
   expect(res.status).toEqual(200)
+  expect(res.data._id).not.toBe(undefined)
+  expect(res.data.message).toBe("Ok")
 })
-test("API tokenize", async () => {
-  const requestData = {
-    payment_token: faker.random.alphaNumeric(),
-    pan: "5123456789012346",
-    expiry_month: "05",
-    expiry_year: "21",
-    cardholder_name: "Test Account",
-    order_id: faker.random.number(),
-    email: faker.internet.email(),
-  }
-  const res = await tokenize(requestData)
+
+test("API getDeliveries", async () => {
+  let delivery = Delivery()
+  delivery.sameDay = false
+  let res = await getDeliveries(api)
   expect(res.status).toEqual(200)
+  expect(res.data).not.toBe(undefined)
+  expect(res.data).toHaveLength(10)
 })
-test("API createPaymentKey", async () => {
-  const requestData = {
-    token: faker.random.alphaNumeric(),
-    amount_cents: faker.random.number(),
-    order_id: faker.random.number(),
-    integration_id: faker.random.number(),
-    shipping_data: {},
-    expiration: faker.random.number(),
-    currency: "EGP",
-  }
-  const res = await createPaymentKey(requestData)
+
+test("API getDeliveries", async () => {
+  let id = "hashashukadsi89"
+  let res = await getDelivery(api, { id })
   expect(res.status).toEqual(200)
+  expect(res.data._id).toEqual(id)
 })
-test("API createOrder", async () => {
-  const requestData = {
-    token: faker.random.alphaNumeric(),
-    amount_cents: faker.random.number(),
-    shipping_data: {},
-    delivery_needed: "false",
-    currency: "EGP",
-    items: [],
-  }
-  const res = await createOrder(requestData)
+
+test("API getDeliveries", async () => {
+  let id = "hashashukadsi89"
+  let res = await updateDelivery(api, { id })
   expect(res.status).toEqual(200)
+  expect(res.data._id).toEqual(id)
 })
-test("API voidTransaction", async () => {
-  const requestData = {
-    token: faker.random.alphaNumeric(),
-    transaction_id: faker.random.number(),
-  }
-  const res = await voidTransaction(requestData)
+
+test("API getDeliveries", async () => {
+  let id = "hashashukadsi89"
+  let res = await cancelDelivery(api, { id })
   expect(res.status).toEqual(200)
+  expect(res.data._id).toEqual(id)
 })
-test("API refundTransaction", async () => {
-  const requestData = {
-    token: faker.random.alphaNumeric(),
-    transaction_id: faker.random.number(),
-  }
-  const res = await refundTransaction(requestData)
+
+test("API getDeliveries", async () => {
+  let id = "hashashukadsi89"
+  let fields = { status: 1 }
+  let res = await canUpdateDelivery(api, { id, fields })
   expect(res.status).toEqual(200)
-})
-test("API updateIntegration", async () => {
-  const requestData = {
-    token: faker.random.alphaNumeric(),
-    transaction_id: faker.random.number(),
-    integration: {},
-  }
-  const res = await updateIntegration(requestData)
-  expect(res.status).toEqual(200)
-})
-test("API getIntegration", async () => {
-  const requestData = {
-    token: faker.random.alphaNumeric(),
-    transaction_id: faker.random.number(),
-  }
-  const res = await getIntegration(requestData)
-  expect(res.status).toEqual(200)
-})
-test("API getUser", async () => {
-  const requestData = {
-    username: faker.name.findName(),
-    password: faker.internet.password(),
-    expiration: faker.random.number(),
-  }
-  const res = await getUser(requestData)
-  expect(res.status).toEqual(200)
+  expect(res.data.canUpdate).toBe(false)
+  expect(res.data.reason).toEqual("Delivery has been made")
 })
