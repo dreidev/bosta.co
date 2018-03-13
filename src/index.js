@@ -74,10 +74,9 @@ export class Bosta {
    * @param {Object} object containing api_key, params for filtering such as page and perPage for pagination
    * @returns [DeliveryRequestObject]
    */
-  static async getDeliveries({
-    api_key = process.env.BOSTA_API_KEY,
-    query,
-  } = {}) {
+  static async getDeliveries(
+    { api_key = process.env.BOSTA_API_KEY, query } = {}
+  ) {
     return getDeliveries(API(api_key), query)
   }
 
@@ -140,6 +139,11 @@ function addressFacade({ address, ...delivery }) {
   if (!address) {
     return delivery
   } else {
+    if (typeof address === "string") {
+      address = { firstLine: address }
+    }
+    address.firstLine = address.firstLine || address.line1 || address.firstLine
+    address.secondLine = address.secondLine || address.line2
     if (isCashCollection(delivery)) {
       delivery.pickupAddress = address
     } else {
