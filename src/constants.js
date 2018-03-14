@@ -1,5 +1,5 @@
-export const STAGE_BASE_URL = "https://staging-api.bosta.co/api/v0.4.1"
-export const BASE_URL = "https://api.bosta.co/api/v0.4.1"
+export const STAGE_BASE_URL = "http://staging-api.bosta.co/api/v0"
+export const BASE_URL = "http://api.bosta.co/api/v0"
 
 export const DELIVERY_STATES = {
   PENDING: { value: "Pending", code: 10 }, // Delivery created and we will start working on it asap.
@@ -16,11 +16,17 @@ export const DELIVERY_STATES = {
   DELIVERED: { value: "Delivered", code: 45 }, // Delivery has been delivered.
   CANVELED: { value: "Canceled", code: 50 }, // Delivery has been cancelled.
   FAILED: { value: "Failed", code: 55 }, // An exception happened to the delivery (e.g. Customer not answering his phone).
+  PICKUP_FAILED: { value: "Failed", code: 80 }, // An exception happened to the delivery (e.g. Customer not answering his phone).
 }
 
 export const DELIVERY_TYPES = {
   PACKAGE_DELIVERY: { value: "Package Delivery", code: 10 }, // Delivery that has two endpoints (pickup and dropoff)
   CASH_COLLECTION: { value: "Cash Collection", code: 15 },
+}
+
+export const CITIES = {
+  CAIRO: { value: "Cairo", code: "EG-01" },
+  ALEXANDRIA: { value: "Alexandria", code: "EG-02" },
 }
 
 export const AREAS = {

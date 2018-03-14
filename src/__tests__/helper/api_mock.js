@@ -40,6 +40,7 @@ export const Address = ({ isSameDay = 0 } = {}) => ({
   secondLine: optional(faker.address.streetAddress()), // (optional) Address notes.
   floor: optional(faker.random.number(9)),
   apartment: optional(faker.random.number(100)),
+  city: faker.helpers.randomize(["EG-01", "EG-02"]),
   zone: optional(faker.helpers.randomize(["Cairo", "Alexandira"])),
   district: optional(
     faker.helpers.randomize([
@@ -67,9 +68,7 @@ export const Delivery = ({
       ? Address({ isSameDay })
       : undefined,
   receiver: Reciever(),
-  state: faker.helpers.randomize(
-    Object.values(DELIVERY_STATES).map(({ code }) => code)
-  ),
+  state: faker.helpers.randomize(Object.values(DELIVERY_STATES)),
   type: faker.helpers.randomize(
     Object.values(DELIVERY_TYPES).map(({ code }) => code)
   ),
@@ -79,18 +78,23 @@ export const Delivery = ({
   businessReference: optional(faker.random.uuid()),
 })
 
-const SUCCESS_MESSAGE = "Ok"
+export const CREATE_SUCCESS_MESSAGE = "Delivery created successfully!"
+export const UPDATE_SUCCESS_MESSAGE = "Delivery updated successfully!"
+export const DELETE_SUCCESS_MESSAGE = "Delivery canceled successfully!"
+
 const api_mocks = [
   {
     method: "post",
     url: /\/deliveries/,
     response: (req, res) => {
-      const { _id } = Delivery(req.data)
+      const { _id, trackingNumber, state } = Delivery(req.data)
       return [
         200,
         {
           _id,
-          message: SUCCESS_MESSAGE,
+          trackingNumber,
+          state,
+          message: CREATE_SUCCESS_MESSAGE,
         },
       ]
     },
@@ -136,7 +140,7 @@ const api_mocks = [
         200,
         {
           _id,
-          message: SUCCESS_MESSAGE,
+          message: UPDATE_SUCCESS_MESSAGE,
         },
       ]
     },
@@ -150,10 +154,10 @@ const api_mocks = [
         200,
         {
           _id,
-          message: SUCCESS_MESSAGE,
+          message: DELETE_SUCCESS_MESSAGE,
         },
       ]
     },
-  }
+  },
 ]
 export default api_mocks

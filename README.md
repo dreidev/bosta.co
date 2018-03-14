@@ -22,24 +22,48 @@ module.exports = {
 Import the bosta.co instance and configure it
 
 ```js
-import Bosta from "bosta.co"
+import Bosta, { DELIVERY_STATES, DELIVERY_TYPES, CITIES } from "bosta.co"
 // or in node < 10 you can
 // const { Bosta } = require("bosta.co")
 // const Bosta = require("bosta.co").default
 
-Bosta.config(BOSTA_CONFIG)
-
 //... later in your code
+/**
+requestDelivery({
+   *  apiKey: String, // don't need to include if  process.env.BOSTA_API_KEY is set
+   *  amount: Number, // the amount to be picked up (includes bosta's fee) optional in case of package delivery
+   *  city: String, // Bosta enum for suported cities required if using address as string
+   *  address: String | Address, // string of addressline or address object of the form { firstLine: String, city: String, geoLocation?: { lat: Number, lng: Number}, secondLine?: String, floor?: Number, appartment?: Number, zone?: String, District?: String } with firstLine being
+   *  pickupAddress?: Address, // where the package is to be picked up from or cash to be collected from depending on delivery type
+   *  deliveryAddress?: Address, // where package is to be delivered
+   *  receiver: receiver, // who the delivery is ment for, object of the form { firstName: String, lastName: String, phone: String, email?: String } optional if name, phone is set
+   *  name: String, // reciever first and last name required in case reciever object not set
+   *  phone: String, // reciever phone required in case reciever object not set
+   *  notes?: String, // A note for the courrier
+   *  businessReference?: String, // an id for your personal use in your system
+   * })
+   * 
+   */
+await Bosta.requestDelivery({
+  apiKey: process.env.BOSTA_API_KEY, // this is the default
+  type: DELIVERY_TYPES.CASH_COLLECTION.code,
+  address: "7 Almaza square, Heliopolis, Cairo",
+  amount: 40,
+  city: CITIES.CAIRO.code,
+  name: "Amr Draz",
+  phone: "+200201020202",
+})
 
-await Bosta.deliver({})
+await Bosta.collect({...}) // same as requestDelivery but sets type to CASH_COLLECTION,
+await Bosta.deliver({...}) // same as requestDelivery but sets type to PACAKGE_DELIVERY,
 
-await Bosta.collect({})
+
 ```
  
 See tests for the rest of the available functions.
 
 This package has partial coverage of the bosta API requesting cash on delivery and cash collection.
 
-The package is maintianed by DREIDEV and is not an offical bosta.co package
+The package is maintianed by [DREIDEV](https://dreidev.com) and is not an offical bosta.co package
 
 Licence MIT

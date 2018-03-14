@@ -8,9 +8,9 @@ import {
   getDeliveries,
 } from "./api"
 
-import { DELIVERY_TYPES, DELIVERY_STATES } from "./constants"
+import { DELIVERY_TYPES, DELIVERY_STATES, CITIES } from "./constants"
 
-export { DELIVERY_TYPES, DELIVERY_STATES }
+export { DELIVERY_TYPES, DELIVERY_STATES, CITIES }
 
 export class Bosta {
   /**
@@ -19,18 +19,24 @@ export class Bosta {
    * requestDelivery({
    *  apiKey: String, // don't need to include if  process.env.BOSTA_API_KEY is set
    *  amount: Number, // the amount to be picked up (includes bosta's fee) optional in case of package delivery
-   *  address: String | Address, // string of addressline or address object of the form { firstLine: String, geoLocation?: { lat: Number, lng: Number}, secondLine?: String, floor?: Number, appartment?: Number, zone?: String, District?: String } with firstLine being
+   *  city: String, // Bosta enum for suported cities required if using address as string
+   *  address: String | Address, // string of addressline or address object of the form { firstLine: String, city: String, geoLocation?: { lat: Number, lng: Number}, secondLine?: String, floor?: Number, appartment?: Number, zone?: String, District?: String } with firstLine being
    *  pickupAddress?: Address, // where the package is to be picked up from or cash to be collected from depending on delivery type
    *  deliveryAddress?: Address, // where package is to be delivered
-   *  reciever: Reciever, // who the delivery is ment for, object of the form { firstName: String, lastName: String, phone: String, email?: String }
-   *  notes: String, // A note for the courrier
-   *  businessReference: String, // an id for your personal use in your system
+   *  receiver: receiver, // who the delivery is ment for, object of the form { firstName: String, lastName: String, phone: String, email?: String } optional if name, phone is set
+   *  name: String, // reciever first and last name required in case reciever object not set
+   *  phone: String, // reciever phone required in case reciever object not set
+   *  notes?: String, // A note for the courrier
+   *  businessReference?: String, // an id for your personal use in your system
    * })
    * ```
    * @param {DeliveryRequestObject} delivery
    */
   static async requestDelivery({ apiKey, ...delivery }) {
-    delivery = isSameDayFacade(addressFacade(amountFacade(delivery)))
+    delivery = isSameDayFacade(
+      receiverFacade(addressFacade(amountFacade(delivery)))
+    )
+
     return createDelivery(API({ apiKey }), delivery)
   }
 
@@ -122,16 +128,36 @@ function amountFacade({ amount, ...delivery }) {
 }
 
 /**
+ * converts field name, phone, email to a receiver object to match the api spcification of bosta
+ * @param {DeliveryRequestObject} delivery
+ * @returns DeliveryRequestObject
+ */
+function receiverFacade({ name, phone, ...delivery }) {
+  if (!delivery.receiver) {
+    if (!name) throw new Error("name is required in absance of receiver object")
+    if (!phone)
+      throw new Error("phone is required in absance of receiver object")
+    let [firstName, lastName] = name.split(" ")
+    delivery.receiver = {
+      firstName,
+      lastName,
+      phone,
+    }
+  }
+  return delivery
+}
+
+/**
  * converts field address to either pickupAddress or dropOffAddress depending on the delivery type
  * @param {DeliveryRequestObject} delivery
  * @returns DeliveryRequestObject
  */
-function addressFacade({ address, ...delivery }) {
+function addressFacade({ address, city, ...delivery }) {
   if (!address) {
     return delivery
   } else {
     if (typeof address === "string") {
-      address = { firstLine: address }
+      address = { firstLine: address, city }
     }
     address.firstLine = address.firstLine || address.line1 || address.firstLine
     address.secondLine = address.secondLine || address.line2
