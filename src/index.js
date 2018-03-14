@@ -17,7 +17,7 @@ export class Bosta {
    * request delivery from bosta's api
    * ```
    * requestDelivery({
-   *  api_key: String, // don't need to include if  process.env.BOSTA_API_KEY is set
+   *  apiKey: String, // don't need to include if  process.env.BOSTA_API_KEY is set
    *  amount: Number, // the amount to be picked up (includes bosta's fee) optional in case of package delivery
    *  address: String | Address, // string of addressline or address object of the form { firstLine: String, geoLocation?: { lat: Number, lng: Number}, secondLine?: String, floor?: Number, appartment?: Number, zone?: String, District?: String } with firstLine being
    *  pickupAddress?: Address, // where the package is to be picked up from or cash to be collected from depending on delivery type
@@ -29,12 +29,9 @@ export class Bosta {
    * ```
    * @param {DeliveryRequestObject} delivery
    */
-  static async requestDelivery({
-    api_key = process.env.BOSTA_API_KEY,
-    ...delivery
-  }) {
+  static async requestDelivery({ apiKey, ...delivery }) {
     delivery = isSameDayFacade(addressFacade(amountFacade(delivery)))
-    return createDelivery(API(api_key), delivery)
+    return createDelivery(API({ apiKey }), delivery)
   }
 
   /**
@@ -57,54 +54,48 @@ export class Bosta {
 
   /**
    * get data about one delivery
-   * @param {Object} object containing api_key, id of delivery, and optionally fields to limit returned results
+   * @param {Object} object containing apiKey, id of delivery, and optionally fields to limit returned results
    * @returns DeliveryRequestObject
    */
-  static async getDelivery({
-    api_key = process.env.BOSTA_API_KEY,
-    id,
-    fields,
-  }) {
+  static async getDelivery({ apiKey, id, fields }) {
     fields = convertToQueryParamsFlags(fields)
-    return getDelivery(API(api_key), { id, fields })
+    return getDelivery(API({ apiKey }), { id, fields })
   }
 
   /**
    * get list of submited deliveris
-   * @param {Object} object containing api_key, params for filtering such as page and perPage for pagination
+   * @param {Object} object containing apiKey, params for filtering such as page and perPage for pagination
    * @returns [DeliveryRequestObject]
    */
-  static async getDeliveries(
-    { api_key = process.env.BOSTA_API_KEY, query } = {}
-  ) {
-    return getDeliveries(API(api_key), query)
+  static async getDeliveries({ apiKey, query } = {}) {
+    return getDeliveries(API({ apiKey }), query)
   }
 
   /**
    * update part of delivery if possible depending on status
    * @param {DeliveryRequestObject} delivery
    */
-  static async update({ api_key = process.env.BOSTA_API_KEY, ...delivery }) {
-    return updateDelivery(API(api_key), delivery)
+  static async update({ apiKey, ...delivery }) {
+    return updateDelivery(API({ apiKey }), delivery)
   }
 
   /**
    * check if a list of fields can be updated example canUpdate({ id: 2, fields: ["pickupAddress"]})
-   * @param {Object} object containing api_key, id of delivery, and fields to check
+   * @param {Object} object containing apiKey, id of delivery, and fields to check
    * @returns DeliveryRequestObject
    */
-  static async canUpdate({ api_key = process.env.BOSTA_API_KEY, id, fields }) {
+  static async canUpdate({ apiKey, id, fields }) {
     fields = convertToQueryParamsFlags(fields)
-    return canUpdateDelivery(API(api_key), { id, fields })
+    return canUpdateDelivery(API({ apiKey }), { id, fields })
   }
 
   /**
    * delete delivery record if status has not moved to delivered
-   * @param {Object} object containing api_key and id of delivery
+   * @param {Object} object containing apiKey and id of delivery
    * @returns DeliveryRequestObject
    */
-  static async cancel({ api_key = process.env.BOSTA_API_KEY, id }) {
-    return cancelDelivery(API(api_key), { id })
+  static async cancel({ apiKey, id }) {
+    return cancelDelivery(API({ apiKey }), { id })
   }
 }
 

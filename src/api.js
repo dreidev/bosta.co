@@ -1,11 +1,14 @@
-import Axios from "axios"
-import { BASE_URL } from "./constants"
+import axios from "axios"
+import { BASE_URL, STAGE_BASE_URL } from "./constants"
 
-export const API = (api_key, url) =>
-  Axios.create({
-    baseURL: url || BASE_URL,
+export const API = ({
+  apiKey = process.env.BOSTA_API_KEY,
+  baseURL = process.env.NODE_ENV === "test" ? STAGE_BASE_URL : BASE_URL,
+} = {}) =>
+  axios.create({
+    baseURL,
     headers: {
-      Authorization: `Authorization: ${api_key}`,
+      Authorization: apiKey,
       Accept: "application/json",
       "Content-Type": "application/json",
     },

@@ -1,3 +1,4 @@
+export const STAGE_BASE_URL = "https://staging-api.bosta.co/api/v0.4.1"
 export const BASE_URL = "https://api.bosta.co/api/v0.4.1"
 
 export const DELIVERY_STATES = {

@@ -55,12 +55,12 @@ export const Address = ({ isSameDay = 0 } = {}) => ({
 })
 
 export const Delivery = ({
-  _id,
+  _id = faker.random.uuid(),
   isSameDay = 0,
   type = DELIVERY_TYPES.PACKAGE_DELIVERY.code,
-  cod,
+  cod = optional(faker.commerce.price()),
 } = {}) => ({
-  _id: _id || faker.random.uuid(),
+  _id,
   pickupAddress: Address(),
   dropOffAddress:
     type === DELIVERY_TYPES.PACKAGE_DELIVERY.code
@@ -75,7 +75,7 @@ export const Delivery = ({
   ),
   trackingNumber: faker.random.uuid(),
   notes: optional(faker.lorem.paragraph()),
-  cod: cod || optional(faker.commerce.price()), // Cash On Delivery amount
+  cod, // Cash On Delivery amount
   businessReference: optional(faker.random.uuid()),
 })
 
@@ -97,16 +97,29 @@ const api_mocks = [
   },
   {
     method: "get",
-    url: /\/deliveries/,
+    url: /\/deliveries$/,
     response: (req, res) => {
-      const perPage = req.params.perPage || 10
+      const perPage = (req.params && req.params.perPage) || 10
       const deliveries = Array.from(new Array(perPage)).map(_ => Delivery())
       return [200, deliveries]
     },
   },
   {
     method: "get",
-    url: /\/deliveries\/([\d\w]+)/,
+    url: /\/deliveries\/can_update_delivery\/[\d\w]+$/,
+    response: (req, res) => {
+      return [
+        200,
+        {
+          canUpdate: false,
+          reason: "Delivery has been made",
+        },
+      ]
+    },
+  },
+  {
+    method: "get",
+    url: /\/deliveries\/([\d\w]+)$/,
     response: (req, res) => {
       const _id = req.url.match(/\/deliveries\/([\d\w]+)/)[1]
       // const filter = req.params // specify which fields return if not present return all
@@ -141,19 +154,6 @@ const api_mocks = [
         },
       ]
     },
-  },
-  {
-    method: "get",
-    url: /\/deliveries\/can_update_delivery\/[\d\w]+/,
-    response: (req, res) => {
-      return [
-        200,
-        {
-          canUpdate: false,
-          reason: "Delivery has been made",
-        },
-      ]
-    },
-  },
+  }
 ]
 export default api_mocks

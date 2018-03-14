@@ -5,7 +5,8 @@ import Bosla, { DELIVERY_TYPES } from "../index"
 // const { NODE_ENV, PORT } = process.env
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000
 // let url
-process.env.BOSLA_API_KEY = CONFIG.API_KEY
+process.env.BOSTA_API_KEY = process.env.BOSTA_API_KEY || CONFIG.API_KEY
+process.env.NODE_ENV = process.env.NODE_ENV || "test"
 
 describe("Bosla methods", () => {
   let cashCollection, packageDelivery
