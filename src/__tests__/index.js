@@ -1,15 +1,12 @@
 import CONFIG from "../../config"
 import Bosta, { DELIVERY_TYPES, CITIES } from "../index"
 
-// import { mockAllAPIs, removeAPIMock } from "./helper/api_mock"
-// const { NODE_ENV, PORT } = process.env
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000
-// let url
 process.env.BOSTA_API_KEY = process.env.BOSTA_API_KEY || CONFIG.API_KEY
 process.env.NODE_ENV = "test"
 
 describe("Bosta methods", () => {
-  let cashCollection, createdDeliveries
+  let cashCollection
 
   test("Bosta Generic request delivery method", async () => {
     let res
@@ -141,6 +138,5 @@ describe("Bosta methods", () => {
     }
     expect(res.status).toBe(200)
     expect(res.data.deliveries.length).toBeGreaterThan(1)
-    createdDeliveries = res.data.deliveries
   })
 })
