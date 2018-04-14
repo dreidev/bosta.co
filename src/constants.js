@@ -14,7 +14,7 @@ export const DELIVERY_STATES = {
   DELIVERING_TO_WAREHOUSE: { value: "Delivering to warehouse", code: 36 }, // Bosta star is on his way to warehouse after picking up the scheduled delivery from you.
   ARRIVED_AT_CUSTOMER: { value: "Arrived at customer", code: 40 }, // Bosta star arrived to the receiver.
   DELIVERED: { value: "Delivered", code: 45 }, // Delivery has been delivered.
-  CANVELED: { value: "Canceled", code: 50 }, // Delivery has been cancelled.
+  CANCELED: { value: "Canceled", code: 50 }, // Delivery has been cancelled.
   FAILED: { value: "Failed", code: 55 }, // An exception happened to the delivery (e.g. Customer not answering his phone).
   PICKUP_FAILED: { value: "Failed", code: 80 }, // An exception happened to the delivery (e.g. Customer not answering his phone).
 }
