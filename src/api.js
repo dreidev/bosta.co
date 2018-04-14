@@ -3,7 +3,8 @@ import { BASE_URL, STAGE_BASE_URL } from "./constants"
 
 export const API = ({
   apiKey = process.env.BOSTA_API_KEY,
-  baseURL = process.env.NODE_ENV === "test" ? STAGE_BASE_URL : BASE_URL,
+  live = true,
+  baseURL = process.env.NODE_ENV === "test" || !live ? STAGE_BASE_URL : BASE_URL,
 } = {}) =>
   axios.create({
     baseURL,

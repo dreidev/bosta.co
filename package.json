@@ -1,6 +1,6 @@
 {
   "name": "bosta.co",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "A package for managing integration with bost.co a courier with cash collection provider",
   "esnext": "src/index.js",
   "main": "lib/index.js",
@@ -70,9 +70,7 @@
     "jest-environment-node-debug": "^2.0.0",
     "localtunnel": "^1.8.3",
     "morgan": "^1.9.0",
-    "ngrok": "^2.2.26",
     "prettier": "^1.8.2",
-    "supertest": "^3.0.0",
     "xhr-mock": "^1.9.1"
   },
   "jest": {

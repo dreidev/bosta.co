@@ -9,8 +9,9 @@ import {
 } from "./api"
 
 import { DELIVERY_TYPES, DELIVERY_STATES, CITIES } from "./constants"
+import { DELIVERY_TYPES, DELIVERY_STATES, CITIES } from "./constants"
 
-export { DELIVERY_TYPES, DELIVERY_STATES, CITIES }
+export { BostaRouter } from "./express_router"
 
 export class Bosta {
   /**
@@ -28,16 +29,17 @@ export class Bosta {
    *  phone: String, // reciever phone required in case reciever object not set
    *  notes?: String, // A note for the courrier
    *  businessReference?: String, // an id for your personal use in your system
+   *  webhookUrl?: String, // a url that will recieve a wehookStateUpdate post request
    * })
    * ```
    * @param {DeliveryRequestObject} delivery
    */
-  static async requestDelivery({ apiKey, ...delivery }) {
+  static async requestDelivery({ apiKey, live, ...delivery }) {
     delivery = isSameDayFacade(
       receiverFacade(addressFacade(amountFacade(delivery)))
     )
 
-    return createDelivery(API({ apiKey }), delivery)
+    return (await createDelivery(API({ apiKey, live }), delivery)).data
   }
 
   /**
@@ -63,9 +65,9 @@ export class Bosta {
    * @param {Object} object containing apiKey, id of delivery, and optionally fields to limit returned results
    * @returns DeliveryRequestObject
    */
-  static async getDelivery({ apiKey, id, fields }) {
+  static async getDelivery({ apiKey, live, id, fields }) {
     fields = convertToQueryParamsFlags(fields)
-    return getDelivery(API({ apiKey }), { id, fields })
+    return (await getDelivery(API({ apiKey }), { id, fields })).data
   }
 
   /**
@@ -73,16 +75,16 @@ export class Bosta {
    * @param {Object} object containing apiKey, params for filtering such as page and perPage for pagination
    * @returns [DeliveryRequestObject]
    */
-  static async getDeliveries({ apiKey, query } = {}) {
-    return getDeliveries(API({ apiKey }), query)
+  static async getDeliveries({ apiKey, live, query } = {}) {
+    return (await getDeliveries(API({ apiKey }), query)).data
   }
 
   /**
    * update part of delivery if possible depending on status
    * @param {DeliveryRequestObject} delivery
    */
-  static async update({ apiKey, ...delivery }) {
-    return updateDelivery(API({ apiKey }), delivery)
+  static async update({ apiKey, live, ...delivery }) {
+    return (await updateDelivery(API({ apiKey, live }), delivery).data
   }
 
   /**
@@ -90,9 +92,9 @@ export class Bosta {
    * @param {Object} object containing apiKey, id of delivery, and fields to check
    * @returns DeliveryRequestObject
    */
-  static async canUpdate({ apiKey, id, fields }) {
+  static async canUpdate({ apiKey, live, id, fields }) {
     fields = convertToQueryParamsFlags(fields)
-    return canUpdateDelivery(API({ apiKey }), { id, fields })
+    return (await canUpdateDelivery(API({ apiKey, live }), { id, fields })).data
   }
 
   /**
@@ -100,8 +102,8 @@ export class Bosta {
    * @param {Object} object containing apiKey and id of delivery
    * @returns DeliveryRequestObject
    */
-  static async cancel({ apiKey, id }) {
-    return cancelDelivery(API({ apiKey }), { id })
+  static async cancel({ apiKey, live, id }) {
+    return (await cancelDelivery(API({ apiKey, live }), { id })).data
   }
 }
 

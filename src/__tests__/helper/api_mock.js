@@ -78,6 +78,16 @@ export const Delivery = ({
   businessReference: optional(faker.random.uuid()),
 })
 
+export const WebhookStateUpdate = () => {
+  return {
+    _id: faker.random.uuid(),
+    state: faker.helpers.randomize(Object.values(DELIVERY_STATES)),
+    starName: optional(faker.name.findName()),
+    cod: optional(faker.commerce.price()),
+    exceptionReason: optional(faker.lorem.paragraph()),
+  }
+}
+
 export const CREATE_SUCCESS_MESSAGE = "Delivery created successfully!"
 export const UPDATE_SUCCESS_MESSAGE = "Delivery updated successfully!"
 export const DELETE_SUCCESS_MESSAGE = "Delivery canceled successfully!"
@@ -155,6 +165,19 @@ const api_mocks = [
         {
           _id,
           message: DELETE_SUCCESS_MESSAGE,
+        },
+      ]
+    },
+  },
+  {
+    method: "post",
+    url: /\/api\/webhook/,
+    response: (req, res) => {
+      return [
+        200,
+        {
+          _id: faker.random.uuid(),
+          exceptionReason: DELETE_SUCCESS_MESSAGE,
         },
       ]
     },

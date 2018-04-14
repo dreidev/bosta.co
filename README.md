@@ -41,6 +41,7 @@ requestDelivery({
    *  phone: String, // reciever phone required in case reciever object not set
    *  notes?: String, // A note for the courrier
    *  businessReference?: String, // an id for your personal use in your system
+   *  webhookUrl?: String, // a url that will recieve a wehookStateUpdate post request
    * })
    * 
    */
@@ -57,8 +58,9 @@ await Bosta.requestDelivery({
 await Bosta.collect({...}) // same as requestDelivery but sets type to CASH_COLLECTION,
 await Bosta.deliver({...}) // same as requestDelivery but sets type to PACAKGE_DELIVERY,
 
-
 ```
+
+
  
 See tests for the rest of the available functions.
 
