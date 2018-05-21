@@ -9,7 +9,8 @@ import {
 } from "./api"
 
 import { DELIVERY_TYPES, DELIVERY_STATES, CITIES } from "./constants"
-import { DELIVERY_TYPES, DELIVERY_STATES, CITIES } from "./constants"
+
+export { DELIVERY_TYPES, DELIVERY_STATES, CITIES }
 
 export { BostaRouter } from "./express_router"
 
@@ -67,7 +68,7 @@ export class Bosta {
    */
   static async getDelivery({ apiKey, live, id, fields }) {
     fields = convertToQueryParamsFlags(fields)
-    return (await getDelivery(API({ apiKey }), { id, fields })).data
+    return (await getDelivery(API({ apiKey, live }), { id, fields })).data
   }
 
   /**
@@ -76,7 +77,7 @@ export class Bosta {
    * @returns [DeliveryRequestObject]
    */
   static async getDeliveries({ apiKey, live, query } = {}) {
-    return (await getDeliveries(API({ apiKey }), query)).data
+    return (await getDeliveries(API({ apiKey, live }), query)).data
   }
 
   /**
@@ -84,7 +85,7 @@ export class Bosta {
    * @param {DeliveryRequestObject} delivery
    */
   static async update({ apiKey, live, ...delivery }) {
-    return (await updateDelivery(API({ apiKey, live }), delivery).data
+    return (await updateDelivery(API({ apiKey, live }), delivery)).data
   }
 
   /**

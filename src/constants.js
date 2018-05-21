@@ -2,21 +2,21 @@ export const STAGE_BASE_URL = "http://staging-api.bosta.co/api/v0"
 export const BASE_URL = "http://api.bosta.co/api/v0"
 
 export const DELIVERY_STATES = {
-  PENDING: { value: "Pending", code: 10 }, // Delivery created and we will start working on it asap.
-  IN_PROGRESS: { value: "In progress", code: 15 }, // Our operation team started working on your delivery.
-  ON_ROUTE: { value: "Delivery on route", code: 16 }, // You delivery has been assigned for star.
-  PICKING_UP: { value: "Picking up", code: 20 }, // Bosta Star is on his way to pick the delivery.
-  PICKING_UP_FROM_WAREHOUSE: { value: "Picking up from warehouse", code: 21 }, // Bosta star is on his way to pick the scheduled delivery from warehouse.
-  ARRIVED_AT_WAREHOUSE: { value: "Arrived at warehouse", code: 22 }, // Bosta star has arrived to warehouse with your scheduled delivery.
-  ARRIVED_AT_BUSINESS: { value: "Arrived at business", code: 25 }, // Bosta star arrived at pickup location.
-  PICKED_UP: { value: "Picked up", code: 30 }, // Bosta star is already picked up your delivery.
-  DELIVERING: { value: "Delivering", code: 35 }, // Bosta star is on his way to deliver your package to its destination.
-  DELIVERING_TO_WAREHOUSE: { value: "Delivering to warehouse", code: 36 }, // Bosta star is on his way to warehouse after picking up the scheduled delivery from you.
-  ARRIVED_AT_CUSTOMER: { value: "Arrived at customer", code: 40 }, // Bosta star arrived to the receiver.
-  DELIVERED: { value: "Delivered", code: 45 }, // Delivery has been delivered.
-  CANCELED: { value: "Canceled", code: 50 }, // Delivery has been cancelled.
-  FAILED: { value: "Failed", code: 55 }, // An exception happened to the delivery (e.g. Customer not answering his phone).
-  PICKUP_FAILED: { value: "Failed", code: 80 }, // An exception happened to the delivery (e.g. Customer not answering his phone).
+  PENDING: { value: "pending", code: 10 }, // Delivery created and we will start working on it asap.
+  IN_PROGRESS: { value: "in progress", code: 15 }, // Our operation team started working on your delivery.
+  ON_ROUTE: { value: "delivery on route", code: 16 }, // You delivery has been assigned for star.
+  PICKING_UP: { value: "picking up", code: 20 }, // Bosta Star is on his way to pick the delivery.
+  PICKING_UP_FROM_WAREHOUSE: { value: "picking up from warehouse", code: 21 }, // Bosta star is on his way to pick the scheduled delivery from warehouse.
+  ARRIVED_AT_WAREHOUSE: { value: "arrived at warehouse", code: 22 }, // Bosta star has arrived to warehouse with your scheduled delivery.
+  ARRIVED_AT_BUSINESS: { value: "arrived at business", code: 25 }, // Bosta star arrived at pickup location.
+  PICKED_UP: { value: "picked up", code: 30 }, // Bosta star is already picked up your delivery.
+  DELIVERING: { value: "delivering", code: 35 }, // Bosta star is on his way to deliver your package to its destination.
+  DELIVERING_TO_WAREHOUSE: { value: "delivering to warehouse", code: 36 }, // Bosta star is on his way to warehouse after picking up the scheduled delivery from you.
+  ARRIVED_AT_CUSTOMER: { value: "arrived at customer", code: 40 }, // Bosta star arrived to the receiver.
+  DELIVERED: { value: "delivered", code: 45 }, // Delivery has been delivered.
+  CANCELED: { value: "canceled", code: 50 }, // Delivery has been cancelled.
+  FAILED: { value: "failed", code: 55 }, // An exception happened to the delivery (e.g. Customer not answering his phone).
+  PICKUP_FAILED: { value: "failed", code: 80 }, // An exception happened to the delivery (e.g. Customer not answering his phone).
 }
 
 export const DELIVERY_TYPES = {

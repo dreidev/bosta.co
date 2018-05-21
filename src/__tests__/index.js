@@ -1,12 +1,30 @@
-import CONFIG from "../../config"
-import Bosta, { DELIVERY_TYPES, CITIES } from "../index"
+import CONFIG from "../../config.ignore"
+import Bosta, { DELIVERY_TYPES, CITIES, DELIVERY_STATES } from "../index"
+import { startTunnel, closeTunnel } from "./helper/localtunnel"
+import { startServer, closeServer } from "./helper/util"
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 35000
 process.env.BOSTA_API_KEY = process.env.BOSTA_API_KEY || CONFIG.API_KEY
 process.env.NODE_ENV = "test"
 
 describe("Bosta methods", () => {
-  let cashCollection
+  let cashCollection, host
+  beforeAll(async () => {
+    const PORT = 3209
+    ;[{ url: host }] = await Promise.all([
+      startTunnel(PORT),
+      startServer({ PORT }),
+    ])
+
+    console.log(host)
+    console.log(`started localtunnel at ${host}`)
+  })
+
+  afterAll(async () => {
+    console.log("closing tunnel and server")
+    closeTunnel()
+    closeServer()
+  })
 
   test("Bosta Generic request delivery method", async () => {
     let res
@@ -21,12 +39,14 @@ describe("Bosta methods", () => {
         phone: "+200201020202",
       })
     } catch (e) {
-      console.log(e.response.data)
+      console.log(e)
       expect(e).toBeUndefined()
     }
-    // delivery1 = res.data
-    expect(res.status).toBe(200)
-    expect(res.data.message).toEqual("Delivery created successfully!")
+
+    expect(res).toHaveProperty("trackingNumber")
+    expect(res).toHaveProperty("_id")
+    expect(res).toHaveProperty("state", DELIVERY_STATES.PENDING)
+    expect(res.message).toEqual("Delivery created successfully!")
   })
   test("Collect Cash", async () => {
     let res
@@ -39,13 +59,18 @@ describe("Bosta methods", () => {
         phone: "+200201020202",
         notes: "test",
         businessReference: "asdas",
+        webhookUrl: `${host}/bosta/webhook`,
       })
     } catch (e) {
-      console.log(e.response.data)
+      console.log(e)
       expect(e).toBeUndefined()
     }
-    cashCollection = res.data
-    expect(res.status).toBe(200)
+
+    expect(res).toHaveProperty("trackingNumber")
+    expect(res).toHaveProperty("_id")
+    expect(res.message).toEqual("Delivery created successfully!")
+    expect(res).toHaveProperty("state", DELIVERY_STATES.PENDING)
+    cashCollection = res
   })
   test("Package Delivery", async () => {
     let res = await Bosta.deliver({
@@ -58,7 +83,10 @@ describe("Bosta methods", () => {
         floor: 1,
       },
     })
-    expect(res.status).toBe(200)
+    expect(res).toHaveProperty("trackingNumber")
+    expect(res).toHaveProperty("_id")
+    expect(res.message).toEqual("Delivery created successfully!")
+    expect(res).toHaveProperty("state", DELIVERY_STATES.PENDING)
   })
   test("get delivery data", async () => {
     expect(cashCollection).toBeDefined()
@@ -68,12 +96,11 @@ describe("Bosta methods", () => {
         id: cashCollection._id,
       })
     } catch (e) {
-      console.log(e.response.data)
+      console.log(e)
       expect(e).toBeUndefined()
     }
-    expect(res.status).toBe(200)
-    expect(res.data.delivery._id).toEqual(cashCollection._id)
-    cashCollection = res.data.delivery
+    expect(res.delivery._id).toEqual(cashCollection._id)
+    cashCollection = res.delivery
   })
   test("check if can update delivery", async () => {
     expect(cashCollection).toBeDefined()
@@ -84,12 +111,11 @@ describe("Bosta methods", () => {
         fields: ["notes"],
       })
     } catch (e) {
-      console.log(e.response.data)
+      console.log(e)
       expect(e).toBeUndefined()
     }
-    expect(res.status).toBe(200)
-    expect(res.data.canUpdate).toEqual(true)
-    expect(res.data.reason).toBeUndefined()
+    expect(res.canUpdate).toEqual(true)
+    expect(res.reason).toBeUndefined()
   })
   test("check if can update state should fail", async () => {
     expect(cashCollection).toBeDefined()
@@ -109,12 +135,11 @@ describe("Bosta methods", () => {
     try {
       res = await Bosta.update({ id: cashCollection._id, notes })
     } catch (e) {
-      console.log(e.response.data)
+      console.log(e)
       expect(e).toBeUndefined()
     }
-    expect(res.status).toBe(200)
-    expect(res.data._id).toEqual(cashCollection._id)
-    expect(res.data.message).toEqual("Delivery updated successfully!")
+    expect(res._id).toEqual(cashCollection._id)
+    expect(res.message).toEqual("Delivery updated successfully!")
   })
   test("cancel delivery", async () => {
     expect(cashCollection).toBeDefined()
@@ -122,21 +147,19 @@ describe("Bosta methods", () => {
     try {
       res = await Bosta.cancel({ id: cashCollection._id })
     } catch (e) {
-      console.log(e.response.data)
+      console.log(e)
       expect(e).toBeUndefined()
     }
-    expect(res.status).toBe(200)
-    expect(res.data._id).toEqual(cashCollection._id)
+    expect(res._id).toEqual(cashCollection._id)
   })
   test("get deliveries", async () => {
     let res
     try {
       res = await Bosta.getDeliveries()
     } catch (e) {
-      console.log(e.response.data)
+      console.log(e)
       expect(e).toBeUndefined()
     }
-    expect(res.status).toBe(200)
-    expect(res.data.deliveries.length).toBeGreaterThan(1)
+    expect(res.deliveries.length).toBeGreaterThan(1)
   })
 })

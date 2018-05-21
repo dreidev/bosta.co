@@ -10,10 +10,7 @@ function ConfigureBostaRouter({
 }) {
   const router = Router()
 
-  router.post(
-    notificationEndpoint,
-    hookWrapper(onNotification)
-  )
+  router.post(notificationEndpoint, hookWrapper(onNotification))
 
   return router
 }

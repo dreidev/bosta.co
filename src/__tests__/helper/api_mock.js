@@ -177,6 +177,9 @@ const api_mocks = [
         200,
         {
           _id: faker.random.uuid(),
+          state: {},
+          cod: 20,
+          starName: "",
           exceptionReason: DELETE_SUCCESS_MESSAGE,
         },
       ]
