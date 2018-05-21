@@ -9,10 +9,13 @@ import {
 } from "./api"
 
 import { DELIVERY_TYPES, DELIVERY_STATES, CITIES } from "./constants"
+import { v4 } from "uuid"
 
 export { DELIVERY_TYPES, DELIVERY_STATES, CITIES }
 
 export { BostaRouter } from "./express_router"
+
+export function UID() { return v4() }
 
 export class Bosta {
   /**
