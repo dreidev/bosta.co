@@ -15,7 +15,9 @@ export { DELIVERY_TYPES, DELIVERY_STATES, CITIES }
 
 export { BostaRouter } from "./express_router"
 
-export function UID() { return v4() }
+export function UID() {
+  return v4()
+}
 
 export class Bosta {
   /**

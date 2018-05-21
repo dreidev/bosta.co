@@ -1,6 +1,6 @@
 {
   "name": "bosta.co",
-  "version": "0.4.9",
+  "version": "0.5.0",
   "description": "A package for managing integration with bost.co a courier with cash collection provider",
   "esnext": "src/index.js",
   "main": "lib/index.js",
