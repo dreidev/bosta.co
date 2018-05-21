@@ -1,6 +1,6 @@
 {
   "name": "bosta.co",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "A package for managing integration with bost.co a courier with cash collection provider",
   "esnext": "src/index.js",
   "main": "lib/index.js",
@@ -17,7 +17,7 @@
     "jest": "jest",
     "lint": "eslint --fix src/**",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "pprepare": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
