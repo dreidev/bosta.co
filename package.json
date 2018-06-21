@@ -68,9 +68,10 @@
     "faker": "^4.1.0",
     "jest": "^21.2.1",
     "jest-environment-node-debug": "^2.0.0",
-    "localtunnel": "^1.8.3",
+    "localtunnel": "^1.9.0",
     "morgan": "^1.9.0",
     "prettier": "^1.8.2",
+    "supertest": "^3.1.0",
     "xhr-mock": "^1.9.1"
   },
   "jest": {

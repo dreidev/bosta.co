@@ -14,9 +14,12 @@ Include your paymob accept credentials in a gitingnored `.env` or configuration 
 
 ```js
 // config.js
+require("dotenv").config()
 module.exports = {
-  API_KEY: process.env.BOSTA_API_KEY || "-----------------"
+  API_KEY: process.env.BOSTA_API_KEY,
+  notification_endpoint: process.env.BOSTA_NOTIFICATION_ENDPOINT,
 }
+
 ```
 
 Import the bosta.co instance and configure it
@@ -60,6 +63,43 @@ await Bosta.deliver({...}) // same as requestDelivery but sets type to PACAKGE_D
 
 ```
 
+### webhook
+
+Package includes a router and middelware functions to handel webhooks
+
+Bosta does not include an hamc or any secret to authenticate the webhook, but, since each webhook is assocaited with the delivery request, you can set an extra parameter in the url as a secret to be validated
+
+```js
+// app.js
+const express = require("express")
+const { BostaRouter } = require("accept-admin")
+// or
+// const { BostaRouter } = require("accept-admin/lib/express_router")
+
+const app = express()
+
+app.use(BostaRouter({
+  notificationEndpoint: '/bosta/webhook/:secret', // default
+  onNotification(req, res) {
+    // validate req.params.secret is what you expect either from the model or a hash on your end
+    if (req.params.secret===req.body._id) {
+      console.log("Notification", req.body)
+    }
+  },
+}))
+```
+
+and when making a request you simply make sure to include it in the webhook
+
+```js
+await Bosta.requestDelivery({
+  apiKey: process.env.BOSTA_API_KEY, // this is the default
+  ...,
+  webHook: "http:/.../supersecrethash"
+})
+```
+
+otherwise you can just leave the notificationEndpoint url unprotected `/bosta/webhook`
 
  
 See tests for the rest of the available functions.

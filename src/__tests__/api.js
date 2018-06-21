@@ -15,7 +15,7 @@ import {
   canUpdateDelivery,
   cancelDelivery,
 } from "../api"
-import CONFIG from "../../config.ignore"
+import CONFIG from "../../config"
 import { STAGE_BASE_URL, BASE_URL } from "src/constants"
 
 process.env.BOSTA_API_KEY = process.env.BOSTA_API_KEY || CONFIG.API_KEY

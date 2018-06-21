@@ -1,4 +1,4 @@
-import CONFIG from "../../config.ignore"
+import CONFIG from "../../config"
 import Bosta, { DELIVERY_TYPES, CITIES, DELIVERY_STATES } from "../index"
 import { startTunnel, closeTunnel } from "./helper/localtunnel"
 import { startServer, closeServer } from "./helper/util"
